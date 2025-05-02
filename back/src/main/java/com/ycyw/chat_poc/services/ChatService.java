@@ -1,9 +1,11 @@
 package com.ycyw.chat_poc.services;
 
+import com.ycyw.chat_poc.dtos.ChatDto;
 import com.ycyw.chat_poc.models.Chat;
 import com.ycyw.chat_poc.models.User;
 import com.ycyw.chat_poc.repositories.ChatRepository;
 import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +20,9 @@ public class ChatService {
     chat.setCustomer(customer);
     chat.setCreatedAt(Instant.now());
     return chatRepository.save(chat);
+  }
+
+  public List<ChatDto> getChats() {
+    return chatRepository.findAll().stream().map(ChatDto::new).toList();
   }
 }

@@ -1,6 +1,7 @@
 package com.ycyw.chat_poc.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,7 +54,7 @@ class ChatControllerTest {
         .perform(post("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
         .andExpect(status().isOk());
 
-    assertEquals(1L, chatRepository.count());
+    assertEquals(2L, chatRepository.count());
   }
 
   @Test
@@ -81,6 +82,62 @@ class ChatControllerTest {
         .perform(post("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
         .andExpect(status().isForbidden());
 
-    assertEquals(0L, chatRepository.count());
+    assertEquals(1L, chatRepository.count());
+  }
+
+  @Test
+  void shouldBeAbleToViewChats() throws Exception {
+
+    final String loginRequest =
+        """
+                 {
+                     "email": "agent1@ycyw.com",
+                     "password": "user2Password!"
+                  }
+                """;
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.accessToken").exists())
+            .andReturn();
+
+    LoginResponse loginResponse =
+        objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
+
+    mockMvc
+        .perform(get("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.chats.length()").value(1))
+        .andExpect(jsonPath("$.chats[0].customer").value("customer@test.com"));
+  }
+
+  @Test
+  void shouldNotBeAbleToViewChats() throws Exception {
+
+    final String loginRequest =
+        """
+                 {
+                     "email": "customer@test.com",
+                     "password": "user1Password!"
+                  }
+                """;
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.accessToken").exists())
+            .andReturn();
+
+    LoginResponse loginResponse =
+        objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
+
+    mockMvc
+        .perform(get("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
+        .andExpect(status().isForbidden());
   }
 }
