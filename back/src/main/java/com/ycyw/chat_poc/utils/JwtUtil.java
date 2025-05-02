@@ -31,7 +31,7 @@ public class JwtUtil {
             .issuedAt(now)
             .expiresAt(now.plusSeconds(accessTokenValidity))
             .subject(user.getEmail())
-            .claim("roles", List.of(user.getRole().name()))
+            .claim("roles", List.of("ROLE_" + user.getRole().name()))
             .build();
 
     return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
