@@ -1,5 +1,6 @@
 package com.ycyw.chat_poc.controllers;
 
+import com.ycyw.chat_poc.dtos.ChatDto;
 import com.ycyw.chat_poc.models.User;
 import com.ycyw.chat_poc.payloads.ChatListResponse;
 import com.ycyw.chat_poc.services.ChatService;
@@ -23,10 +24,10 @@ public class ChatController {
 
   @PreAuthorize("hasRole('CUSTOMER')")
   @PostMapping
-  public ResponseEntity<String> createChat(Authentication authentication) {
+  public ResponseEntity<ChatDto> createChat(Authentication authentication) {
     User customer = userService.findByEmail(authentication.getName());
-    chatService.createChat(customer);
-    return ResponseEntity.ok("Chat created successfully!");
+    ChatDto chatDto = new ChatDto(chatService.createChat(customer));
+    return ResponseEntity.ok(chatDto);
   }
 
   @PreAuthorize("hasRole('CUSTOMER_SERVICE')")

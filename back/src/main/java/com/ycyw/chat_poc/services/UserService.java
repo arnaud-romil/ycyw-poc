@@ -1,5 +1,6 @@
 package com.ycyw.chat_poc.services;
 
+import com.ycyw.chat_poc.dtos.UserDto;
 import com.ycyw.chat_poc.exceptions.UserUnauthorizedException;
 import com.ycyw.chat_poc.models.User;
 import com.ycyw.chat_poc.payloads.LoginRequest;
@@ -26,7 +27,7 @@ public class UserService {
       throw new UserUnauthorizedException("Invalid email or password");
     }
 
-    return new LoginResponse(jwtUtil.generateAccessToken(user));
+    return new LoginResponse(jwtUtil.generateAccessToken(user), new UserDto(user));
   }
 
   public User findByEmail(String email) {

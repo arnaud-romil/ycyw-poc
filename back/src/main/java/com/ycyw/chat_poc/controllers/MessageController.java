@@ -8,10 +8,10 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class MessageController {
 
-    @MessageMapping("/chat.send.{chatId}")
-    @SendTo("/topic/chat.{chatId}")
-    public String sendMessage(@DestinationVariable String chatId, String message) {
-        System.out.println(message + " => " + chatId);
-        return message;
-    }
+  @MessageMapping("/chat.send.{chatId}")
+  @SendTo("/topic/chat.{chatId}")
+  public String sendMessage(@DestinationVariable String chatId, String message) {
+    System.out.println(message + " => " + chatId);
+    return message;
+  }
 }

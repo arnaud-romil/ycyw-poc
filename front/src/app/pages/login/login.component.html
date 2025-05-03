@@ -1,0 +1,18 @@
+<div class="login">
+    <h1 class="login__title">Se connecter</h1>
+
+    <form class="login__form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form__field">
+            <label for="email">E-mail</label>
+            <input type="text" id="email" name="email" autocomplete="username" formControlName="email" required>
+        </div>
+        <div>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" autocomplete="current-password"
+                formControlName="password" required>
+        </div>
+        <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>
+    </form>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+</div>

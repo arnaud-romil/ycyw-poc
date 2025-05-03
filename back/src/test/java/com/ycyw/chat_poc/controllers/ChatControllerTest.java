@@ -52,7 +52,10 @@ class ChatControllerTest {
 
     mockMvc
         .perform(post("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").exists())
+        .andExpect(jsonPath("$.customer").value("customer@test.com"))
+        .andExpect(jsonPath("$.createdAt").exists());
 
     assertEquals(2L, chatRepository.count());
   }
