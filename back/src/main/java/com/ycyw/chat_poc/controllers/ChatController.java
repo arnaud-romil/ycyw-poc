@@ -2,9 +2,9 @@ package com.ycyw.chat_poc.controllers;
 
 import com.ycyw.chat_poc.dtos.ChatDto;
 import com.ycyw.chat_poc.models.User;
-import com.ycyw.chat_poc.payloads.ChatListResponse;
 import com.ycyw.chat_poc.services.ChatService;
 import com.ycyw.chat_poc.services.UserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/chats")
+@RequestMapping("/api/chats")
 @RequiredArgsConstructor
 public class ChatController {
 
@@ -32,7 +32,7 @@ public class ChatController {
 
   @PreAuthorize("hasRole('CUSTOMER_SERVICE')")
   @GetMapping
-  public ResponseEntity<ChatListResponse> getChats() {
-    return ResponseEntity.ok(new ChatListResponse(chatService.getChats()));
+  public ResponseEntity<List<ChatDto>> getChats() {
+    return ResponseEntity.ok(chatService.getChats());
   }
 }

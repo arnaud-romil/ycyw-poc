@@ -42,7 +42,8 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             authorize -> {
-              authorize.requestMatchers("/auth/login").permitAll();
+              authorize.requestMatchers("/ws/**").permitAll();
+              authorize.requestMatchers("/api/auth/login").permitAll();
               authorize.anyRequest().authenticated();
             })
         .oauth2ResourceServer(

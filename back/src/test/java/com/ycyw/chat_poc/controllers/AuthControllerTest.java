@@ -29,19 +29,23 @@ class AuthControllerTest {
 
     final String loginRequest =
         """
-         {
-             "email": "customer@test.com",
-             "password": "user1Password!"
-          }
-        """;
+                 {
+                     "email": "customer@test.com",
+                     "password": "user1Password!"
+                  }
+                """;
 
     MvcResult result =
         mockMvc
             .perform(
-                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+                post("/api/auth/login")
+                    .content(loginRequest)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken").exists())
             .andExpect(jsonPath("$.user").exists())
+            .andExpect(jsonPath("$.user.firstName").value("Anna"))
+            .andExpect(jsonPath("$.user.lastName").value("Rees"))
             .andExpect(jsonPath("$.user.email").value("customer@test.com"))
             .andExpect(jsonPath("$.user.role").value("CUSTOMER"))
             .andReturn();
@@ -57,14 +61,15 @@ class AuthControllerTest {
 
     final String loginRequest =
         """
-         {
-             "email": "agent1@ycyw.com",
-             "password": "user2Password!"
-          }
-        """;
+                 {
+                     "email": "agent1@ycyw.com",
+                     "password": "user2Password!"
+                  }
+                """;
 
     mockMvc
-        .perform(post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            post("/api/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.accessToken").exists())
         .andReturn();
@@ -75,14 +80,15 @@ class AuthControllerTest {
 
     final String loginRequest =
         """
-         {
-             "email": "customer@test.com",
-             "password": "wrongPassword!"
-          }
-        """;
+                 {
+                     "email": "customer@test.com",
+                     "password": "wrongPassword!"
+                  }
+                """;
 
     mockMvc
-        .perform(post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            post("/api/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized())
         .andExpect(jsonPath("$.accessToken").doesNotExist());
   }

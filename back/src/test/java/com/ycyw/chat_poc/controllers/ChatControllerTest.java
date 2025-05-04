@@ -7,8 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ycyw.chat_poc.models.Chat;
 import com.ycyw.chat_poc.payloads.LoginResponse;
 import com.ycyw.chat_poc.repositories.ChatRepository;
+import com.ycyw.chat_poc.repositories.UserRepository;
+import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,6 +30,7 @@ class ChatControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ChatRepository chatRepository;
+  @Autowired private UserRepository userRepository;
 
   @Test
   @DirtiesContext
@@ -42,7 +46,9 @@ class ChatControllerTest {
     MvcResult result =
         mockMvc
             .perform(
-                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+                post("/api/auth/login")
+                    .content(loginRequest)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken").exists())
             .andReturn();
@@ -51,17 +57,18 @@ class ChatControllerTest {
         objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
 
     mockMvc
-        .perform(post("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
+        .perform(
+            post("/api/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.customer").value("customer@test.com"))
         .andExpect(jsonPath("$.createdAt").exists());
 
-    assertEquals(2L, chatRepository.count());
+    assertEquals(1L, chatRepository.count());
   }
 
   @Test
-  void shouldNotBeAbleToCreateChatWithLogin() throws Exception {
+  void shouldNotBeAbleToCreateChat() throws Exception {
     final String loginRequest =
         """
                  {
@@ -73,7 +80,9 @@ class ChatControllerTest {
     MvcResult result =
         mockMvc
             .perform(
-                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+                post("/api/auth/login")
+                    .content(loginRequest)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken").exists())
             .andReturn();
@@ -82,15 +91,18 @@ class ChatControllerTest {
         objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
 
     mockMvc
-        .perform(post("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
+        .perform(
+            post("/api/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
         .andExpect(status().isForbidden());
 
-    assertEquals(1L, chatRepository.count());
+    assertEquals(0L, chatRepository.count());
   }
 
   @Test
   void shouldBeAbleToViewChats() throws Exception {
 
+    createChat();
+
     final String loginRequest =
         """
                  {
@@ -102,7 +114,9 @@ class ChatControllerTest {
     MvcResult result =
         mockMvc
             .perform(
-                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+                post("/api/auth/login")
+                    .content(loginRequest)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken").exists())
             .andReturn();
@@ -111,10 +125,13 @@ class ChatControllerTest {
         objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
 
     mockMvc
-        .perform(get("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
+        .perform(
+            get("/api/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.chats.length()").value(1))
-        .andExpect(jsonPath("$.chats[0].customer").value("customer@test.com"));
+        .andExpect(jsonPath("$.length()").value(1))
+        .andExpect(jsonPath("[0].customer").value("customer@test.com"));
+
+    deleteAllChats();
   }
 
   @Test
@@ -131,7 +148,9 @@ class ChatControllerTest {
     MvcResult result =
         mockMvc
             .perform(
-                post("/auth/login").content(loginRequest).contentType(MediaType.APPLICATION_JSON))
+                post("/api/auth/login")
+                    .content(loginRequest)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken").exists())
             .andReturn();
@@ -140,7 +159,20 @@ class ChatControllerTest {
         objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
 
     mockMvc
-        .perform(get("/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
+        .perform(
+            get("/api/chats").header("Authorization", "Bearer " + loginResponse.getAccessToken()))
         .andExpect(status().isForbidden());
+  }
+
+  private void createChat() {
+    Chat chat = new Chat();
+    chat.setCustomer(userRepository.findByEmail("customer@test.com").get());
+    chat.setCreatedAt(Instant.now());
+
+    chatRepository.save(chat);
+  }
+
+  private void deleteAllChats() {
+    chatRepository.deleteAll();
   }
 }

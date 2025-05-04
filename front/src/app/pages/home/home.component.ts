@@ -1,22 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserInfo } from '../../models/user-info.interface';
 import { AuthService } from '../../core/auth.service';
 import { Router } from '@angular/router';
 import { ChatService } from '../../core/chat.service';
+import { CommonModule } from '@angular/common';
+import { Chat } from '../../models/chat.interface';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
-  userInfo: UserInfo;
+  userInfo!: UserInfo;
+  activeChats: Chat[] = [];
 
   constructor(private readonly authService: AuthService, private readonly chatService: ChatService, private readonly router: Router) {
+  }
+  ngOnInit(): void {
     this.userInfo = JSON.parse(this.authService.getUserInfo());
+    if (this.userInfo.role === 'CUSTOMER_SERVICE') {
+      this.chatService.getActiveChats().subscribe({
+        next: (chats) => {
+          this.activeChats = chats;
+        },
+        error: (err) => {
+          console.error('Error fetching active chats:', err);
+        }
+      });
+    }
+
   }
 
   startChat() {
@@ -24,14 +42,17 @@ export class HomeComponent {
       this.chatService.createChat().subscribe({
         next: (chat) => {
           const chatId = chat.id;
-          console.log('Chat created with ID:', chatId);
-          //this.router.navigate(['/chat', chatId]);
+          this.router.navigate(['/chat', chatId]);
         },
         error: (err) => {
           console.error('Error creatin chat:', err);
         }
       });
     }
+  }
+
+  openChat(chatId: number) {
+    this.router.navigate(['/chat', chatId]);
   }
 
 }

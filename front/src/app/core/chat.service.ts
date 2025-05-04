@@ -14,5 +14,8 @@ export class ChatService {
     return this.http.post<Chat>('/api/chats', {});
   }
 
+  getActiveChats(): Observable<Chat[]> {
+    return this.http.get<Chat[]>('/api/chats');
+  }
 
 }

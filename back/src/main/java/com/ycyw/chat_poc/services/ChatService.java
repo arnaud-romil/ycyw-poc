@@ -25,4 +25,8 @@ public class ChatService {
   public List<ChatDto> getChats() {
     return chatRepository.findAll().stream().map(ChatDto::new).toList();
   }
+
+  public Chat findyById(Long id) {
+    return chatRepository.findById(id).orElseThrow(() -> new RuntimeException("Chat not found"));
+  }
 }
