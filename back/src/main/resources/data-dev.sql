@@ -4,4 +4,4 @@ DELETE FROM `USERS`;
 
 INSERT INTO `USERS` (`ID`, `FIRST_NAME`, `LAST_NAME`, `EMAIL`, `PASSWORD`, `ROLE`) VALUES 
 (1, 'Anna', 'Rees', 'customer@test.com', '$2a$10$Y5KWtorVwUbuE.FraqTBD.hJIT7CcfgFNd7C./u.5N6BkScPF3ipq', 'CUSTOMER'),
-(2, 'Eric', 'Lambert', 'agent1@ycyw.com', '$2a$10$AiNQzm8AgoUr/JeA7GSUTe3FMZ9nCnXV1R12ZlDZF0K/q.YtqdAEK', 'CUSTOMER_SERVICE');
+(2, 'Eric', 'Lambert', 'agent1@ycyw.com', '$2a$10$AiNQzm8AgoUr/JeA7GSUTe3FMZ9nCnXV1R12ZlDZF0K/q.YtqdAEK', 'SUPPORT');

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserInfo } from '../../models/user-info.interface';
 import { AuthService } from '../../core/auth.service';
+import { ChatService } from '../../core/chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -24,14 +25,20 @@ export class ChatComponent implements OnInit, OnDestroy {
   stompClient: Stomp.Client | null = null;
   messages: Message[] = [];
   newMessage = '';
-  userInfo: UserInfo;
+  userInfo!: UserInfo;
 
-  constructor(private readonly route: ActivatedRoute, private readonly authService: AuthService, private readonly router: Router) {
-    this.userInfo = JSON.parse(this.authService.getUserInfo());
+  constructor(private readonly route: ActivatedRoute, private readonly authService: AuthService, private readonly chatService: ChatService, private readonly router: Router) {
   }
 
   ngOnInit(): void {
     this.chatId = this.route.snapshot.paramMap.get('id')!;
+    this.userInfo = JSON.parse(this.authService.getUserInfo());
+    this.chatService.getChatMessages(this.chatId).subscribe({
+      next: (chatMessages) => {
+        this.messages.push(...chatMessages);
+      }
+    });
+
     this.connect();
   }
 

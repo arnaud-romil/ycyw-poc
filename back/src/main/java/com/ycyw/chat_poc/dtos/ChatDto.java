@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 public class ChatDto {
 
+  private Long id;
+  private String customer;
+  private Instant createdAt;
+
   public ChatDto(Chat chat) {
     this.id = chat.getId();
     this.customer = chat.getCustomer().getEmail();
     this.createdAt = chat.getCreatedAt();
   }
-
-  private Long id;
-  private String customer;
-  private Instant createdAt;
 }

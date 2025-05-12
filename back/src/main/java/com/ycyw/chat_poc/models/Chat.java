@@ -2,6 +2,8 @@ package com.ycyw.chat_poc.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,16 @@ public class Chat {
   @JoinColumn(name = "customer_id", nullable = false)
   private User customer;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Status status;
+
   @Column(name = "created_at", nullable = false, updatable = false)
   private Instant createdAt;
+
+  public enum Status {
+    PENDING,
+    ACTIVE,
+    CLOSED
+  }
 }

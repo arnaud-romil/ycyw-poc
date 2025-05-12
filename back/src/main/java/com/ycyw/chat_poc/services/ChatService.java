@@ -18,6 +18,7 @@ public class ChatService {
   public Chat createChat(User customer) {
     Chat chat = new Chat();
     chat.setCustomer(customer);
+    chat.setStatus(Chat.Status.PENDING);
     chat.setCreatedAt(Instant.now());
     return chatRepository.save(chat);
   }

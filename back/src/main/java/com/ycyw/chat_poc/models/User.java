@@ -40,6 +40,6 @@ public class User implements Serializable {
 
   public enum Role {
     CUSTOMER,
-    CUSTOMER_SERVICE
+    SUPPORT
   }
 }
