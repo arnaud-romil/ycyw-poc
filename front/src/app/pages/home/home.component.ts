@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.userInfo = JSON.parse(this.authService.getUserInfo());
-    if (this.userInfo.role === 'CUSTOMER_SERVICE') {
+    if (this.userInfo.role === 'SUPPORT') {
       this.chatService.getActiveChats().subscribe({
         next: (chats) => {
           this.activeChats = chats;

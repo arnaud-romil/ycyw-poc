@@ -7,7 +7,7 @@
         <button (click)="startChat()">Contacter le support</button>
     </div>
 
-    <div *ngIf="userInfo.role === 'CUSTOMER_SERVICE'">
+    <div *ngIf="userInfo.role === 'SUPPORT'">
         <p>Voici les chats en cours: </p>
 
         <ul *ngIf="activeChats.length > 0 ; else noChats">
