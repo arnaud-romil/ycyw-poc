@@ -1,0 +1,39 @@
+.home-greeting {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
+.customer-container {
+    margin: auto;
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.support-container {
+    margin-top: 100px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.2rem;
+}
+
+.customer-btn {
+    text-align: center;
+    margin-top: 2.5rem;
+    width: 139px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+
+.chats {
+    margin-top: 2rem;
+}
+
+.join-btn {
+    width: 120px;
+    border-radius: 8px;
+    padding: 0.3rem;
+    font-size: 1.2rem;
+}

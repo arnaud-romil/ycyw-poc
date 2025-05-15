@@ -3,14 +3,15 @@ import { UserInfo } from '../../models/user-info.interface';
 import { AuthService } from '../../core/auth.service';
 import { Router } from '@angular/router';
 import { ChatService } from '../../core/chat.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Chat } from '../../models/chat.interface';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    DatePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

@@ -1,19 +1,20 @@
 <div class="home-container">
-    <h1>Your Car Your Way</h1>
 
-    <h2>Bonjour {{userInfo.firstName}} {{userInfo.lastName}}</h2>
+    <h1 class="header">Your Car Your Way</h1>
 
-    <div *ngIf="userInfo.role === 'CUSTOMER'">
-        <button (click)="startChat()">Contacter le support</button>
+    <h2 class="home-greeting">Bonjour {{userInfo.firstName}} {{userInfo.lastName}}</h2>
+
+    <div class="customer-container" *ngIf="userInfo.role === 'CUSTOMER'">
+        <button class="customer-btn" (click)="startChat()">Contacter le support</button>
     </div>
 
-    <div *ngIf="userInfo.role === 'SUPPORT'">
-        <p>Voici les chats en cours: </p>
+    <div class="support-container" *ngIf="userInfo.role === 'SUPPORT'">
+        <p class="bold">Chats en cours: </p>
 
-        <ul *ngIf="activeChats.length > 0 ; else noChats">
+        <ul class="chats" *ngIf="activeChats.length > 0 ; else noChats">
             <li *ngFor="let chat of activeChats">
-                Chat # {{chat.id }} - Client: {{chat.customer}} - Date: {{chat.createdAt}}
-                <button (click)="openChat(chat.id)">Rejoindre</button>
+                # {{chat.id }} - {{ chat.createdAt | date: 'd/MM/yyyy, à HH:mm'}}
+                <button class="join-btn" (click)="openChat(chat.id)">Rejoindre</button>
             </li>
         </ul>
         <ng-template #noChats>
