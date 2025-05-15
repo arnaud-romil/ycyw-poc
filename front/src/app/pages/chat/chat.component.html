@@ -1,0 +1,18 @@
+<div class="chat-container">
+
+    <h1 class="header">Your Car Your Way</h1>
+
+    <div class="messages">
+        <div *ngFor="let message of messages">
+            <strong>{{ message.sender }}:</strong> {{ message.content }}
+        </div>
+    </div>
+
+    <div class="input-area">
+        <textarea [(ngModel)]="newMessage" (keydown.enter)="sendMessage()"
+            placeholder="Tapez ici votre message..."></textarea>
+        <button (click)="sendMessage()">Envoyer</button>
+    </div>
+
+    <button class="back-btn" (click)="goBack()">Revenir à la page d'accueil</button>
+</div>
