@@ -40,7 +40,6 @@ public class ChatController {
     return ResponseEntity.ok(chatService.getChats());
   }
 
-  @PreAuthorize("hasRole('SUPPORT')")
   @GetMapping("/{id}/messages")
   public ResponseEntity<List<MessageDto>> getChatMessages(@PathVariable Long id) {
     return ResponseEntity.ok(messageService.getChatMessages(id));
